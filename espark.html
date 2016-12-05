@@ -16,7 +16,7 @@
 						<section class="overlay-content"> 
 							<h1>Directions:</h1>
 							<p>
-								Watch the following video and then answer the questions at the end!
+								Watch the following video about our Solar System. Answer the questions after the video ends!
 							</p>
 						</section>
 						<footer class="overlay-footer">
@@ -29,7 +29,7 @@
 						<section class="overlay-content"> 
 							<h1>Get Ready!</h1>
 							<p>
-								Now answer three questions you learned from the video you just watched!
+								Now answer three questions about what you learned in the video you just watched!
 							</p>
 						</section>
 						<footer class="overlay-footer">
@@ -46,7 +46,18 @@
 							</p>
 						</section>
 						<footer class="overlay-footer">
-							<button class="btn" onclick="player.nextQuestion()">
+							<button id="current-question-choice-0" class="btn choice" onclick="player.choose(event, 0)">
+								Option #1
+							</button>
+							<button id="current-question-choice-1" class="btn choice" onclick="player.choose(event, 1)">
+								Option #2
+							</button>
+							<button id="current-question-choice-2" class="btn choice" onclick="player.choose(event, 2)">
+								Option #3
+							</button>
+						</footer>
+						<footer class="overlay-footer">
+							<button class="btn" id="next-question" onclick="player.nextQuestion()" disabled="disabled">
 								Continue
 							</button>
 						</footer>

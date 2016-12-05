@@ -11,6 +11,38 @@ var abTests = {
 	2: 'Prevent the student from controlling video playback, and play the video 1.5x as fast'
 };
 
+// Questions
+
+var questions = [
+	{
+		text: 'What is the center of our Solar System?',
+		choices: [
+			'The Sun',
+			'Saturn',
+			'Earth'
+		],
+		correctChoice: 0
+	},
+	{
+		text: 'How many moons does Mars have?',
+		choices: [
+			'None',
+			'Two',
+			'Thousands'
+		],
+		correctChoice: 1
+	},
+	{
+		text: 'How many planets are in our Solar System?',
+		choices: [
+			'Twelve',
+			'Eight',
+			'Thousands'
+		],
+		correctChoice: 1
+	}
+];
+
 // Screens
 
 var screens = {
@@ -51,6 +83,7 @@ function Player() {
 		correctAnswers: 0,
 		totalQuestions: 3,
 		currentQuestionIndex: 0,
+		currentChoiceIndex: null,
 		currentScreen: null,
 		startQuizTime: null,
 		studentLog: [],
@@ -71,7 +104,6 @@ function Player() {
 			case YT.PlayerState.ENDED:
 				self.track('Video ended');
 				self.showScreen('prepareQuestions');
-				
 				break;
 			case YT.PlayerState.PAUSED:
 				self.track('Video paused');
@@ -120,8 +152,30 @@ function Player() {
 		self.drawCurrentQuestion();
 	}
 	
+	this.choose = function (event, choice) {
+		self.clearChoiceSelection();
+		
+		self.data.currentChoiceIndex = choice;
+		
+		var currentQuestion = questions[self.data.currentQuestionIndex];
+		self.track('Student selected choice: "' + currentQuestion.choices[choice] + '"');
+		
+		event.target.className = 'btn choice selected';
+		document.querySelector('#next-question').disabled = '';
+	};
+	
 	this.nextQuestion = function () {
+		// Record final choice
+		var currentQuestion = questions[self.data.currentQuestionIndex];
+		if (self.data.currentChoiceIndex === currentQuestion.correctChoice) {
+			self.data.correctAnswers++;
+		}
+		
+		self.clearChoiceSelection();
 		self.data.currentQuestionIndex++;
+		self.data.currentChoiceIndex = null;
+		
+		document.querySelector('#next-question').disabled = 'disabled';
 		
 		if (self.data.currentQuestionIndex >= self.data.totalQuestions) {
 			self.showScreen('done');
@@ -130,9 +184,34 @@ function Player() {
 		}
 	};
 	
+	this.clearChoiceSelection = function () {
+		var choiceElements = document.querySelectorAll('.choice');
+	
+		for (var i = 0; i < choiceElements.length; i++) {
+			choiceElements[i].className = 'btn choice';
+		}
+	};
+	
 	this.drawCurrentQuestion = function () {
-		var questionIdElement = document.querySelector('#' + 'current-question-id');
-		var questionTextElement = document.querySelector('#' + 'current-question-text');
+		var questionIdElement = document.querySelector('#current-question-id');
+		var questionTextElement = document.querySelector('#current-question-text');
+		
+		var questionChoiceElements = [
+			document.querySelector('#current-question-choice-0'),
+			document.querySelector('#current-question-choice-1'),
+			document.querySelector('#current-question-choice-2')
+		];
+		
+		var currentQuestion = questions[self.data.currentQuestionIndex];
+		
+		questionTextElement.innerText = currentQuestion.text;
+		
+		for (var i = 0; i < 3; i++) {
+			questionChoiceElements[i].innerText = currentQuestion.choices[i];
+		}
+		
+		var currentQuestion = questions[self.data.currentQuestionIndex];
+		self.track('Showing question: "' + currentQuestion.text + '"');
 		
 		questionIdElement.innerHTML = self.data.currentQuestionIndex + 1;
 	};
@@ -147,6 +226,7 @@ function Player() {
 		
 		console.log('Student got ' + self.data.correctAnswers + ' answers out of ' + self.data.totalQuestions + ' correct');
 		console.log('Student took ' + seconds + ' seconds to complete the quiz');
+		console.log('Student was assessed under the following variation: "' + abTests[abTest] + '"');
 		
 		console.log('\nStudent Log:\n\n');
 	
@@ -180,7 +260,7 @@ function Player() {
 // AB Testing
 
 function chooseRandomABTest() {
-	return Math.round(Math.random() * 3);
+	return Math.floor(Math.random() * 3);
 }
 
 function getABTestValue(variable) {
