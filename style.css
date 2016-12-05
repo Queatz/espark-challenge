@@ -1,5 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Fredoka+One');
+
 body {
-	overflow: hidden;	
+	background: #0d1630;
+	overflow: hidden;
+}
+
+button {
+	font-family: inherit;
 }
 
 .screen {
@@ -17,8 +24,66 @@ body {
 	height: 480px;
 	
 	background: #f0f0f0;
+	border: 8px solid 	#63c;
 }
 
 .content {
+	font-family: 'Fredoka One', sans-serif;
+}
+
+.overlay-screen {
+	position: absolute;
+	display: none;
+	flex-direction: column;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
 	
+	background: #f0f0f0;
+	
+	animation: fade .25s;
+}
+
+.overlay-content {
+	flex: 1;
+	font-size: 1.5rem;
+	
+	padding: 2rem;
+}
+
+.overlay-footer {
+	padding: 2rem;
+	text-align: center;
+}
+
+#results {
+	color: red;
+}
+
+.btn {
+	padding: 1rem 2rem;
+	cursor: pointer;
+	
+	background: #42a;
+	color: #fff;
+	font-weight: bold;
+	font-size: 1.5rem;
+
+	border: 4px solid #222;
+	border-radius: 12px;
+}
+
+.btn:hover {
+	background: #63c;
+}
+
+@keyframes fade {
+	from {
+		opacity: 0;
+	}
+	
+	to {
+		opacity: 1;
+	}
 }

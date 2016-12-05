@@ -4,12 +4,64 @@
 		<title>eSpark Challenge</title>
 		<link rel="stylesheet" href="style.css" />
 		<script type="text/javascript" src="app.js"></script>
+		<script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
 	</head>
 	<body>
 		<section class="screen">
 			<div class="content-wrapper">
 				<div class="content" id="video-placeholder"></div>
-				<div class="content" id="overlay"></div>
+				<div class="content" id="overlay">
+					<div class="overlay-screen" id="screen-begin">
+						<section class="overlay-content"> 
+							<h1>Directions:</h1>
+							<p>
+								Watch the following video and then answer the questions at the end!
+							</p>
+						</section>
+						<footer class="overlay-footer">
+							<button class="btn" onclick="player.showScreen(null)">
+								Let's Go!
+							</button>
+						</footer>
+					</div>
+					<div class="overlay-screen" id="screen-prepare-questions">
+						<section class="overlay-content"> 
+							<h1>Get Ready!</h1>
+							<p>
+								Now answer three questions you learned from the video you just watched!
+							</p>
+						</section>
+						<footer class="overlay-footer">
+							<button class="btn" onclick="player.showScreen('question')">
+								Let's Go!
+							</button>
+						</footer>
+					</div>
+					<div class="overlay-screen" id="screen-question">
+						<section class="overlay-content"> 
+							<h1>Question #<span id="current-question-id">1</span></h1>
+							<p id="current-question-text">
+								Text
+							</p>
+						</section>
+						<footer class="overlay-footer">
+							<button class="btn" onclick="player.nextQuestion()">
+								Continue
+							</button>
+						</footer>
+					</div>
+					<div class="overlay-screen" id="screen-done">
+						<section class="overlay-content"> 
+							<h1>Congrats!</h1>
+							<p>
+								You've just finished the quiz. You got <span id="results"></span> correct!
+							</p>
+							<p>
+								You can now close the window.
+							</p>
+						</section>
+					</div>
+				</div>
 			</div>
 		</section>
 	</body>
