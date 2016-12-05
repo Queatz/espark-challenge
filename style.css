@@ -3,6 +3,7 @@
 body {
 	background: #0d1630;
 	overflow: hidden;
+	font-family: sans-serif;
 }
 
 button {
@@ -59,6 +60,18 @@ button {
 
 #results {
 	color: red;
+}
+
+#ab-test {
+	position: absolute;
+	color: white;
+	top: 1rem;
+	left: 1rem;
+}
+
+.actually-hidden {
+	font-style: italic;
+	color: #aaa;
 }
 
 .btn {

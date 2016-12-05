@@ -3,6 +3,14 @@
 
 var videoId = 'ZHAqT4hXnMw';
 
+var abTest = chooseRandomABTest();
+
+var abTests = {
+	0: 'Give the student control over video playback',
+	1: 'Prevent the student from controlling video playback',
+	2: 'Prevent the student from controlling video playback, and play the video 1.5x as fast'
+};
+
 // Screens
 
 var screens = {
@@ -131,16 +139,16 @@ function Player() {
 	
 	this.dumpLogs = function () {
 		
-		console.log('\nStudent Report:\n');
+		console.log('\nStudent Report:\n\n');
 		
 		var seconds = new Date().getTime() - self.data.startQuizTime.getTime();
 		seconds /= 1000;
 		seconds = Math.round(seconds);
 		
-		console.log('Student got ' + self.data.correctAnswers + ' anwers out of ' + self.data.totalQuestions + ' correct');
+		console.log('Student got ' + self.data.correctAnswers + ' answers out of ' + self.data.totalQuestions + ' correct');
 		console.log('Student took ' + seconds + ' seconds to complete the quiz');
 		
-		console.log('\nStudent Log:\n');
+		console.log('\nStudent Log:\n\n');
 	
 		for (var i = 0; i < self.data.studentLog.length; i++) {
 			var entry = self.data.studentLog[i];
@@ -156,11 +164,42 @@ function Player() {
 	this.initialize = function (player) {
 		self.youtubePlayer = player;
 		self.overlay = document.querySelector('#overlay');
+		
+		var abTestElement = document.querySelector('#ab-test');
+		abTestElement.innerHTML = 'A/B Test #' + (abTest + 1) +
+			'<br />' + 
+			abTests[abTest];
 	};
 	
 	this.ready = function () {
 		self.showScreen('begin');
+		self.youtubePlayer.setPlaybackRate(getABTestValue('playback rate'));
 	};
+}
+
+// AB Testing
+
+function chooseRandomABTest() {
+	return Math.round(Math.random() * 3);
+}
+
+function getABTestValue(variable) {
+	switch (variable) {
+		case 'controls':
+			if (abTest === 1 || abTest === 2) {
+				return 0;
+			} else {
+				return 1;
+			}
+		case 'playback rate':
+			if (abTest === 2) {
+				return 1.5;
+			} else {
+				return 1;
+			}
+		default:
+			throw new Error('Unknown AB test variable: ' + variable);
+	}
 }
 
 // Initialize
@@ -175,8 +214,10 @@ function onYouTubeIframeAPIReady() {
         playerVars: {
             color: 'white',
             showinfo: 0,
+            controls: getABTestValue('controls'),
             end: 104,
-            start: 4
+            start: 4,
+            modestbranding: 1
         },
         events: {
         	onReady: player.ready,
